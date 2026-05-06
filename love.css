@@ -1,0 +1,42 @@
+import { system, world } from "@minecraft/server";
+// config
+const CHECK_INTERVAL = 20;
+const MAX_DISTANCE = 48;
+const UPDATE_INTERVAL = 40;
+let entityLastUpdate = new Map();
+system.runInterval(() => {
+const players = world.getPlayers();
+for (const p of players) {
+const entities = p.getEntitiesFromViewDirection(); //
+if (!entities) continue;
+for (const entity of entities) {
+const dist = p.location.distance(entity.location);
+// удаление при слишком большом расстоянии
+if (dist > MAX_DISTANCE) {
+try {
+entity.remove();
+} catch (e) {}
+continue;
+}
+const now = system.currentTick;
+// безопасный ключ без "??"
+let key = entity.id ? entity.id : entity;
+let lastUpdate = entityLastUpdate.has(key)
+? entityLastUpdate.get(key)
+: 0;
+// редкое обновление, если далеко
+if (dist > MAX_DISTANCE / 2) {
+if ((now - lastUpdate) < UPDATE_INTERVAL) {
+continue;
+}
+}
+entityLastUpdate.set(key, now);
+// проверка на baby-компонент
+try {
+if (entity.hasComponent("minecraft:is_baby")) {
+// optional
+}
+} catch (e) {}
+}
+}
+}, CHECK_INTERVAL);

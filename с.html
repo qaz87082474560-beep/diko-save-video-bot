@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotating Love Heart</title>
+<style>
+    body {
+        margin: 0;
+        background: #050510;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+    }
+
+    #heart {
+        position: relative;
+        width: 700px;
+        height: 700px;
+        animation: rotateHeart 8s linear infinite;
+    }
+
+    .text {
+        position: absolute;
+        color: #ff6699;
+        font-size: 18px;
+        font-weight: bold;
+        text-shadow: 0 0 15px #ff3366;
+        animation: blink 1.5s infinite alternate;
+    }
+
+    @keyframes rotateHeart {
+        0% {
+            transform: rotate(0deg) scale(0.9);
+        }
+        50% {
+            transform: rotate(180deg) scale(1.1);
+        }
+        100% {
+            transform: rotate(360deg) scale(0.9);
+        }
+    }
+
+    @keyframes blink {
+        from {
+            opacity: 0.5;
+            text-shadow: 0 0 5px #ff6699;
+        }
+        to {
+            opacity: 1;
+            text-shadow: 0 0 25px #ff3366;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div id="heart"></div>
+
+<script>
+const heart = document.getElementById("heart");
+
+for (let t = 0; t < Math.PI * 2; t += 0.12) {
+    let x = 16 * Math.pow(Math.sin(t), 3);
+    let y = 13 * Math.cos(t)
+          - 5 * Math.cos(2 * t)
+          - 2 * Math.cos(3 * t)
+          - Math.cos(4 * t);
+
+    let span = document.createElement("span");
+    span.className = "text";
+    span.innerText = "I love you";
+
+    span.style.left = (x * 18 + 300) + "px";
+    span.style.top = (-y * 18 + 300) + "px";
+
+    span.style.animationDelay = (Math.random() * 2) + "s";
+
+    heart.appendChild(span);
+}
+</script>
+
+</body>
+</html>
