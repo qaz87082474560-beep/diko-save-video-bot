@@ -9,7 +9,7 @@ import threading
 import os
 
 TOKEN = "8633205145:AAFk0f-hsTgBAt9r9wb_bUMqvc9ton0zjlc"
-CHANNEL_USERNAME = "https://t.me/diko_vidio_save"
+CHANNEL_USERNAME = "@diko_vidio_save"
 bot = telebot.TeleBot(TOKEN)
 
 # MENU
@@ -87,7 +87,7 @@ def start(message):
             message.chat.id,
             f"❌ Avval kanalga obuna bo‘ling:\n{CHANNEL_USERNAME}"
         )
-    )
+    
 
 # HANDLE
 @bot.message_handler(commands=['start'])
