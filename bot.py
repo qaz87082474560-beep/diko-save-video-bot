@@ -21,11 +21,45 @@ def download_video(url):
         return ydl.prepare_filename(info)
 
 # --- START ---
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.send_message(
-        message.chat.id,
-        "🎬 Video link yubor (YouTube / TikTok / Instagram)"
+@bot.message_handler(func=lambda message: True)
+def handle(message):
+
+    text = message.text
+
+    # VIDEO BUTTON
+    if text == "🎬 Video":
+        bot.send_message(
+            message.chat.id,
+            "📥 Video link yubor"
+        )
+        return
+
+    # MP3 BUTTON
+    if text == "🎵 MP3":
+        bot.send_message(
+            message.chat.id,
+            "🎵 YouTube link yubor"
+        )
+        return
+
+    url = text
+
+    if "http" not in url:
+        bot.send_message(message.chat.id, "❌ Link yubor")
+        return
+
+    bot.send_message(message.chat.id, "⏳ Yuklanmoqda...")
+
+    try:
+        file = download_video(url)
+
+        with open(file, 'rb') as f:
+            bot.send_video(message.chat.id, f)
+
+        os.remove(file)
+
+    except:
+        bot.send_message(message.chat.id, "❌ Link ishlamadi")
     )
 
 # --- HANDLE ---
