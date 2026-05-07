@@ -24,14 +24,15 @@ mode = {}
 # VIDEO DOWNLOAD
 def download_video(url):
 
-    ydl_opts = {
-        'outtmpl': 'video.%(ext)s',
-        'format': 'best',
-        'quiet': True,
-        'noplaylist': True,
-        'cookiefile': 'cookies.txt'
-    }
-
+   ydl_opts = {
+    'outtmpl': 'video.%(ext)s',
+    'format': 'bestvideo+bestaudio/best',
+    'merge_output_format': 'mp4',
+    'quiet': True,
+    'noplaylist': True,
+    'cookiefile': 'cookies.txt',
+    'nocheckcertificate': True
+}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         return ydl.prepare_filename(info)
