@@ -3,12 +3,21 @@ import yt_dlp
 from flask import Flask
 import threading
 import os
+from telebot.types import ReplyKeyboardMarkup, KeyboardButton
 
 TOKEN = "8633205145:AAFk0f-hsTgBAt9r9wb_bUMqvc9ton0zjlc"
 
 bot = telebot.TeleBot(TOKEN)
 
-# --- DOWNLOAD ---
+# MENU
+menu = ReplyKeyboardMarkup(resize_keyboard=True)
+
+btn1 = KeyboardButton("🎬 Video")
+btn2 = KeyboardButton("🎵 MP3")
+
+menu.add(btn1, btn2)
+
+# DOWNLOAD VIDEO
 def download_video(url):
     ydl_opts = {
         'outtmpl': 'video.%(ext)s',
@@ -16,22 +25,43 @@ def download_video(url):
         'noplaylist': True,
         'quiet': True
     }
+
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         return ydl.prepare_filename(info)
 
-# --- START ---
+# START
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.send_message(
         message.chat.id,
-        "🎬 Video link yubor (YouTube / TikTok / Instagram)"
+        "🔥 Diko Save Bot\n\nKerakli bo‘limni tanlang 👇",
+        reply_markup=menu
     )
 
-# --- HANDLE ---
+# HANDLE
 @bot.message_handler(func=lambda message: True)
 def handle(message):
-    url = message.text
+
+    text = message.text
+
+    # VIDEO
+    if text == "🎬 Video":
+        bot.send_message(
+            message.chat.id,
+            "📥 Video link yubor"
+        )
+        return
+
+    # MP3
+    if text == "🎵 MP3":
+        bot.send_message(
+            message.chat.id,
+            "🎵 YouTube link yubor"
+        )
+        return
+
+    url = text
 
     if "http" not in url:
         bot.send_message(message.chat.id, "❌ Link yubor")
@@ -45,7 +75,10 @@ def handle(message):
         size = os.path.getsize(file)
 
         if size > 49 * 1024 * 1024:
-            bot.send_message(message.chat.id, "⚠️ Video juda katta (>50MB)")
+            bot.send_message(
+                message.chat.id,
+                "⚠️ Video juda katta (>50MB)"
+            )
             os.remove(file)
             return
 
@@ -55,9 +88,12 @@ def handle(message):
         os.remove(file)
 
     except:
-        bot.send_message(message.chat.id, "❌ Link ishlamadi")
+        bot.send_message(
+            message.chat.id,
+            "❌ Link ishlamadi"
+        )
 
-# --- FLASK (24/7) ---
+# FLASK
 app = Flask(__name__)
 
 @app.route('/')
