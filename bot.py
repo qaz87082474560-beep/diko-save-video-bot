@@ -36,10 +36,9 @@ def download_video(url):
 
 # DOWNLOAD MP3
 def download_mp3(url):
-
     ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': 'music.%(ext)s',
+        'outtmpl': 'audio.%(ext)s',
         'quiet': True,
         'noplaylist': True,
         'postprocessors': [{
@@ -50,9 +49,9 @@ def download_mp3(url):
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        return "music.mp3"
+        ydl.extract_info(url, download=True)
 
+    return "audio.mp3"
 # START
 @bot.message_handler(commands=['start'])
 def start(message):
