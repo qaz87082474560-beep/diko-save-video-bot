@@ -1,3 +1,6 @@
+
+
+
 import telebot
 import yt_dlp
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
@@ -18,7 +21,7 @@ btn2 = KeyboardButton("🎵 MP3")
 
 menu.add(btn1, btn2)
 
-# USER MODE
+# MODE
 mode = {}
 
 # VIDEO DOWNLOAD
@@ -26,7 +29,7 @@ def download_video(url):
 
     ydl_opts = {
         'outtmpl': 'video.%(ext)s',
-        'format': 'mp4/best',
+        'format': 'best',
         'quiet': True,
         'noplaylist': True,
         'nocheckcertificate': True,
@@ -45,7 +48,8 @@ def download_mp3(url):
         'outtmpl': 'audio.%(ext)s',
         'quiet': True,
         'noplaylist': True,
-        'cookiefile': 'cookies.txt'
+        'nocheckcertificate': True,
+        'geo_bypass': True
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -139,18 +143,6 @@ def handle(message):
         try:
 
             file = download_video(url)
-
-            size = os.path.getsize(file)
-
-            if size > 49 * 1024 * 1024:
-
-                bot.send_message(
-                    message.chat.id,
-                    "⚠️ Video juda katta"
-                )
-
-                os.remove(file)
-                return
 
             with open(file, 'rb') as f:
                 bot.send_video(message.chat.id, f)
