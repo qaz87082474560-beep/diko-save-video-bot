@@ -144,6 +144,6 @@ def run_bot():
 def run_web():
     app.run(host="0.0.0.0", port=8080)
 
-if name == "__main__":
+if __name == "__main__":
     threading.Thread(target=run_bot).start()
     run_web()
