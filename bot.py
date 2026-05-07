@@ -9,7 +9,7 @@ import threading
 import os
 
 TOKEN = "8633205145:AAFk0f-hsTgBAt9r9wb_bUMqvc9ton0zjlc"
-CHANNEL_USERNAME = "@diko_vidio_save"
+CHANNEL_USERNAME = "https://t.me/diko_vidio_save"
 bot = telebot.TeleBot(TOKEN)
 
 # MENU
@@ -52,12 +52,41 @@ def download_mp3(url):
         return ydl.prepare_filename(info)
 
 # START
+CHANNEL_USERNAME = "@diko_vidio_save"
+
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.send_message(
-        message.chat.id,
-        "🔥 Khamutbekov Video Save Bot\n\nKerakli bo'limni tanlang 👇",
-        reply_markup=menu
+
+    user_id = message.from_user.id
+
+    try:
+
+        member = bot.get_chat_member(
+            CHANNEL_USERNAME,
+            user_id
+        )
+
+        if member.status in ["member", "administrator", "creator"]:
+
+            bot.send_message(
+                message.chat.id,
+                "🔥 Khamutbekov Video Save Bot",
+                reply_markup=menu
+            )
+
+        else:
+
+            bot.send_message(
+                message.chat.id,
+                f"❌ Avval kanalga obuna bo‘ling:\n{CHANNEL_USERNAME}"
+            )
+
+    except:
+
+        bot.send_message(
+            message.chat.id,
+            f"❌ Avval kanalga obuna bo‘ling:\n{CHANNEL_USERNAME}"
+        )
     )
 
 # HANDLE
