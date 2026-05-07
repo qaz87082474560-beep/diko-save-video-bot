@@ -9,7 +9,7 @@ import threading
 import os
 
 TOKEN = "8633205145:AAFk0f-hsTgBAt9r9wb_bUMqvc9ton0zjlc"
-
+CHANNEL_USERNAME = "@diko_vidio_save"
 bot = telebot.TeleBot(TOKEN)
 
 # MENU
@@ -61,21 +61,34 @@ def start(message):
     )
 
 # HANDLE
-@bot.message_handler(func=lambda message: True)
-def handle(message):
+@bot.message_handler(commands=['start'])
+def start(message):
 
-    text = message.text
+    user_id = message.from_user.id
 
-    # VIDEO BUTTON
-    if text == "🎬 Video":
-        mode[message.chat.id] = "video"
+    try:
+        member = bot.get_chat_member(CHANNEL_USERNAME, user_id)
+
+        if member.status in ['member', 'administrator', 'creator']:
+
+            bot.send_message(
+                message.chat.id,
+                "🔥 Khamutbekov Video Save Bot\n\nKerakli bo'limni tanlang 👇",
+                reply_markup=menu
+            )
+
+        else:
+            bot.send_message(
+                message.chat.id,
+                f"❌ Avval kanalga obuna bo'ling:\n{CHANNEL_USERNAME}"
+            )
+
+    except:
 
         bot.send_message(
             message.chat.id,
-            "📥 Video link yubor"
+            f"❌ Avval kanalga obuna bo'ling:\n{CHANNEL_USERNAME}"
         )
-        return
-
     # MP3 BUTTON
     if text == "🎵 MP3":
         mode[message.chat.id] = "mp3"
